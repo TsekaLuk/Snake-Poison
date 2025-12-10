@@ -34,9 +34,12 @@ crashlytics-build.properties
 .idea/
 .vs/
 .vscode/
-*.csproj
 *.unityproj
 *.sln
+
+# Keep .NET project files for MacApp and ConsoleApp
+!MacApp/*.csproj
+!ConsoleApp/*.csproj
 *.suo
 *.tmp
 *.user

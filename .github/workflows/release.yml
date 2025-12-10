@@ -1,0 +1,73 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        include:
+          - os: macos-latest
+            rid: osx-arm64
+            artifact: SnakePoison-macOS-arm64
+          - os: macos-13
+            rid: osx-x64
+            artifact: SnakePoison-macOS-x64
+          - os: windows-latest
+            rid: win-x64
+            artifact: SnakePoison-Windows-x64
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Publish MacApp
+        run: |
+          dotnet publish MacApp -c Release -r ${{ matrix.rid }} --self-contained true -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -o publish/${{ matrix.artifact }}
+
+      - name: Create Archive (Unix)
+        if: runner.os != 'Windows'
+        run: |
+          cd publish
+          zip -r ${{ matrix.artifact }}.zip ${{ matrix.artifact }}
+
+      - name: Create Archive (Windows)
+        if: runner.os == 'Windows'
+        run: |
+          Compress-Archive -Path publish/${{ matrix.artifact }} -DestinationPath publish/${{ matrix.artifact }}.zip
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact }}
+          path: publish/${{ matrix.artifact }}.zip
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download All Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: artifacts/**/*.zip
+          generate_release_notes: true
+          draft: false
+          prerelease: ${{ contains(github.ref, '-') }}

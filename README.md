@@ -42,10 +42,17 @@ All sounds are generated programmatically:
 
 ## 🚀 Quick Start
 
-### Prerequisites
-- [.NET 8.0+](https://dotnet.microsoft.com/download) (or .NET 10)
+### Download (No .NET Required)
+Download the latest release for your platform from [Releases](https://github.com/TsekaLuk/Snake-Poison/releases):
+- **macOS (Apple Silicon)**: `SnakePoison-macOS-arm64.zip`
+- **macOS (Intel)**: `SnakePoison-macOS-x64.zip`
+- **Windows**: `SnakePoison-Windows-x64.zip`
 
-### Run the Game
+Unzip and run the executable directly.
+
+### Build from Source
+
+**Prerequisites**: [.NET 8.0+](https://dotnet.microsoft.com/download)
 
 ```bash
 # Clone the repository
@@ -53,12 +60,10 @@ git clone https://github.com/TsekaLuk/Snake-Poison.git
 cd Snake-Poison
 
 # Run the macOS/Desktop version (Raylib)
-cd MacApp
-dotnet run
+dotnet run --project MacApp
 
 # Or run the Console version
-cd ConsoleApp
-dotnet run
+dotnet run --project ConsoleApp
 ```
 
 ## 🎹 Controls
