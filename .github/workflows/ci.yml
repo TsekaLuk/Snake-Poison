@@ -22,11 +22,8 @@ jobs:
         with:
           dotnet-version: '8.0.x'
 
-      - name: Restore dependencies
-        run: dotnet restore
-
       - name: Build MacApp
-        run: dotnet build MacApp -c Release --no-restore
+        run: dotnet build MacApp -c Release
 
       - name: Build ConsoleApp
-        run: dotnet build ConsoleApp -c Release --no-restore
+        run: dotnet build ConsoleApp -c Release
